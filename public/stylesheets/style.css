@@ -6,7 +6,6 @@ body {
 
 body {
 
-  background: #C3BDB3;
   border-top: solid 6px #CC3D33;
   text-align: center;
   
@@ -15,7 +14,9 @@ body {
 }
 
 a {
-  color: #6699FF;
+  color: #CC3D33;
+  padding: 5px;
+  font-weight: bold;
 }
 
 #info-details, #charts {
@@ -56,4 +57,8 @@ a {
 
 .red {
   color: red;
+}
+
+#user-form {
+  margin-top: 5px;
 }
