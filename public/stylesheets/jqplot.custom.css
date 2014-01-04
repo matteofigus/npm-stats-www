@@ -1,0 +1,7 @@
+.jqplot-target {
+  color: #F1F1F1;
+}
+
+table.jqplot-table-legend, table.jqplot-cursor-legend {
+  background-color: rgba(101, 0, 253, 0.89)
+}

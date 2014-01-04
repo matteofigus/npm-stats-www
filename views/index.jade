@@ -1,0 +1,12 @@
+extends layout
+
+block scripts
+  script(src="/javascripts/views/index.js")
+
+block content
+  h1= title
+  p Welcome to #{title}
+
+  form#user-form
+    input.username(type="text")
+    a.submit(href="#") Go

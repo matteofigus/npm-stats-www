@@ -1,0 +1,23 @@
+extends layout
+
+block head
+  | <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="/javascripts/excanvas.min.js" /><![endif]-->
+  script(language="javascript", type="text/javascript").
+    window.username = "#{username}";
+
+  link(rel='stylesheet', href='/stylesheets/jquery.jqplot.min.css')
+  link(rel='stylesheet', href='/stylesheets/jqplot.custom.css')
+
+block scripts
+  script(src="/javascripts/jquery.jqplot.min.js")
+  script(src="/javascripts/jqplot.canvasAxisLabelRenderer.min.js")
+  script(src="/javascripts/jqplot.canvasTextRenderer.min.js")
+  script(src="/javascripts/jqplot.dateAxisRenderer.min.js")
+  script(src="/javascripts/jqplot.highlighter.min.js")
+  script(src="/javascripts/views/user.js")
+
+
+block content
+  h1=title
+  div#loading
+  div#repositories

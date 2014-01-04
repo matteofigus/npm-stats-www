@@ -1,0 +1,59 @@
+body {
+  padding: 0;
+  margin: 0;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+body {
+
+  background: #C3BDB3;
+  border-top: solid 6px #CC3D33;
+  text-align: center;
+  
+  background: #3D3D3D;
+  color: #F1F1F1;
+}
+
+a {
+  color: #6699FF;
+}
+
+#info-details, #charts {
+  width: 100%;
+  float: left;
+  font-family: "Trebuchet MS",Arial,Helvetica,sans-serif;
+}
+
+#info-details {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.chart {
+  width: 60%;
+  height: 450px;
+  float: left;
+}
+.repository {
+  width: 90%;
+  margin: 3%;
+  padding: 2%;
+  float: left;
+  background-color: #000000;
+  border-radius: 15px;
+}
+.repository-details {
+  font-family: "Trebuchet MS",Arial,Helvetica,sans-serif;
+  font-size: 1em;
+  float: left;
+  width: 36%;
+  padding: 2%;
+}
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
+}
