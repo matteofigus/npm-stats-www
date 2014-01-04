@@ -18,11 +18,15 @@ var UserView = function(){
     repositoryDiv: function(divId, repository){
       return "<div class=\"repository\"><div class=\"chart\" id=\"" + divId + "\"></div><div class=\"repository-details\" id=\"" + divId + "-details\"></div></div>";
     },
-    repositoryDetails: function(repository, total, max){
-      var s = "<h2>" + repository + "</h2><br />Total downloads: " + total + "<br />";
+    repositoryDetails: function(repository, total, lastMonth, max){
+      var s = "<h2>" + repository + "</h2><a href=\"https://www.npmjs.org/package/" + repository + 
+              "\" target=\"blank\">open on npm</a><br /><br />Total downloads: " + total + "<br />";
       
+      if(lastMonth >= 0)
+        s += "Last month: " + lastMonth + "<br />";
+
       if(max)
-        s += "Last peak: " + max[0] + "(" + max[1] + ")";
+        s += "Last peak: " + max[0] + " (" + max[1] + ")";
 
       return s;
     }
@@ -73,17 +77,26 @@ var UserView = function(){
         var data = details[i],
             div = data.div + "-details",
             total = 0,
-            max = null;
+            lastMonth = 0,
+            max = null,
+            now = new Date();
+
+            now.setMonth(now.getMonth() - 1);
+
+            var todayOneMonthAgo = now.toJSON().substr(0, 10);
 
         for(var j = 0; j < data.downloads.length; j++){
           total += data.downloads[j][1];
+          if(data.downloads[j][0] >= todayOneMonthAgo)
+            lastMonth += data.downloads[j][1];
+
           if(!max)
             max = data.downloads[j];
           else if(data.downloads[j][1] >= max[1])
             max = data.downloads[j];
         }
 
-        $("#" + div).html(templates.repositoryDetails(data.repository, total, max));
+        $("#" + div).html(templates.repositoryDetails(data.repository, total, lastMonth, max));
       }
     };
 
