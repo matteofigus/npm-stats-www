@@ -6,7 +6,23 @@
   },
   "dependencies": {
     "express": "3.4.4",
-    "jade": "*",
+    "jade": "1.0.2",
     "npm-stats": "0.3.0"
+  },
+  "engines": {
+    "node": ">=0.8.x",
+    "npm": ">=1.1.x"
+  },
+  "devDependencies": {
+    "mocha": ""
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Matteo Figus <matteofigus@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matteofigus/npm-stats-www.git"
   }
 }
