@@ -39,7 +39,7 @@ var UserView = function(){
       return s;
     },
     shareViaTwitter: function(lastMonth){
-      return "<a href=\"https://twitter.com/intent/tweet?button_hashtag=npm-stats&text=Wow!%20" + lastMonth + "%20downloads%20to%20my%20npm%20modules%20this%20month\" data-hashtags=\"npm-stats\" data-url=\"http://www.npm-stats.com/" + username + "\" class=\"twitter-hashtag-button\">Tweet #npm-stats</a>"
+      return "<a href=\"https://twitter.com/intent/tweet?button_hashtag=npm-stats&text=Wow!%20" + lastMonth + "%20downloads%20to%20my%20npm%20modules%20this%20month!%20#npm-stats%20#npm%20#node.js\" data-url=\"http://www.npm-stats.com/" + username + "\" class=\"twitter-hashtag-button\">Tweet #npm-stats</a>"
     }
   };
 
