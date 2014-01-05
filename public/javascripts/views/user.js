@@ -2,7 +2,8 @@ var UserView = function(){
 
   var selectors = {
     loading: "#loading",
-    repositories: "#repositories"
+    repositories: "#repositories",
+    userInfo: "#user-info"
   };
 
   var endpoints = {
@@ -15,8 +16,11 @@ var UserView = function(){
   };
 
   var templates = {
+    userInfo: function(repositoryCount, total, lastMonth){
+      return "Modules: " + repositoryCount + "<br />Total downloads: " + total + "<br />Downloads last month: " + lastMonth;
+    },
     repositoryDiv: function(divId, repository){
-      return "<div class=\"repository\"><div class=\"chart\" id=\"" + divId + "\"></div><div class=\"repository-details\" id=\"" + divId + "-details\"></div></div>";
+      return "<div id=\"" + divId + "-repository\"class=\"repository hide\"><div class=\"chart\" id=\"" + divId + "-chart\"></div><div class=\"repository-details\" id=\"" + divId + "-details\"></div></div>";
     },
     repositoryDetails: function(repository, total, lastMonth, max){
       var s = "<h2>" + repository + "</h2><a href=\"https://www.npmjs.org/package/" + repository + 
@@ -32,6 +36,9 @@ var UserView = function(){
     }
   };
 
+  var maxPlotsPerPage = 3;
+  var userData = [];
+
   this.init = function(){
     $(selectors.loading).html("Loading stats for " + username + "...");
     $.get(endpoints.repositoriesByUser(username), function(data){    
@@ -44,8 +51,7 @@ var UserView = function(){
       $(selectors.loading).html("Loading downloads (0/" + data.length + ")...");
       for(var i = 0; i < data.length; i++){
         var fetched = 0,
-            divId = "repository-" + username + "-" + data[i],
-            dataToPlot = [];
+            divId = username + "-" + data[i];
 
         $(selectors.repositories).append(templates.repositoryDiv(divId, data[i]));
 
@@ -53,12 +59,12 @@ var UserView = function(){
           $.get(endpoint, function(downloads){
 
             $(selectors.loading).html("Loading downloads (" + fetched + "/" + data.length + ")...");
-            dataToPlot.push({ repository: repository, div: div, downloads: downloads});
+            userData.push({ repository: repository, div: div, downloads: downloads});
 
             fetched ++;
             if(fetched == data.length){
-              addDetails(dataToPlot);
-              plot(dataToPlot);
+              addDetails();
+              plot(0, Math.min(data.length, maxPlotsPerPage));
             }
 
           }).fail(function(){
@@ -71,10 +77,13 @@ var UserView = function(){
       return $(selectors.loading).html("An error occurred while trying to retrieve the results");
     });
 
-    var addDetails = function(details){
+    var addDetails = function(){
       $(selectors.loading).html("Rendering the details...");
-      for(var i = 0; i < details.length; i++){
-        var data = details[i],
+      var userTotal = 0,
+          userLastMonth = 0;
+
+      for(var i = 0; i < userData.length; i++){
+        var data = userData[i],
             div = data.div + "-details",
             total = 0,
             lastMonth = 0,
@@ -87,8 +96,12 @@ var UserView = function(){
 
         for(var j = 0; j < data.downloads.length; j++){
           total += data.downloads[j][1];
-          if(data.downloads[j][0] >= todayOneMonthAgo)
+          userTotal += data.downloads[j][1];
+
+          if(data.downloads[j][0] >= todayOneMonthAgo){
             lastMonth += data.downloads[j][1];
+            userLastMonth += data.downloads[j][1];
+          }
 
           if(!max)
             max = data.downloads[j];
@@ -98,13 +111,14 @@ var UserView = function(){
 
         $("#" + div).html(templates.repositoryDetails(data.repository, total, lastMonth, max));
       }
+      $(selectors.userInfo).html(templates.userInfo(userData.length, userTotal, userLastMonth));
     };
 
-    var plot = function(dataToPlot){
+    var plot = function(start, end){
       $(selectors.loading).html("Plotting the data...");
-      for(var i = 0; i < dataToPlot.length; i++){
+      for(var i = start; i < end; i++){
       
-        var data = dataToPlot[i];
+        var data = userData[i];
 
         var options = {
           title: {
@@ -145,10 +159,13 @@ var UserView = function(){
           }]
         };
 
+        $("#" + data.div + "-repository").removeClass("hide");
+
         if(data.downloads.length == 0)
-          $("#" + data.div).html("No data to plot");
+          $("#" + data.div + "-chart").html("No data to plot");
         else
-          var plot = $.jqplot(data.div, [data.downloads], options);
+          var plot = $.jqplot(data.div + "-chart", [data.downloads], options);
+
       }
       $(selectors.loading).html("");
     };
