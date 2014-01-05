@@ -1,3 +1,12 @@
+var nodetime = null;
+
+if(process.env.NODETIME_ACCOUNT_KEY) {
+  nodetime = require('nodetime');
+  nodetime.profile({
+    accountKey: process.env.NODETIME_ACCOUNT_KEY,
+    appName: 'My Application Name' // optional
+  });
+}
 
 /**
  * Module dependencies.
@@ -25,6 +34,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
+  if(nodetime)  
+    app.use(nodetime.expressErrorHandler());
 }
 
 

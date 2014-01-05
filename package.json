@@ -7,7 +7,8 @@
   "dependencies": {
     "express": "3.4.4",
     "jade": "1.0.2",
-    "npm-stats": "0.3.0"
+    "npm-stats": "0.3.0",
+    "nodetime": "*"
   },
   "engines": {
     "node": ">=0.8.x",
