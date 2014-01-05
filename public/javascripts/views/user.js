@@ -3,7 +3,8 @@ var UserView = function(){
   var selectors = {
     loading: "#loading",
     repositories: "#repositories",
-    userInfo: "#user-info"
+    userInfo: "#user-info",
+    showMore: "#show-more"
   };
 
   var endpoints = {
@@ -36,8 +37,20 @@ var UserView = function(){
     }
   };
 
-  var maxPlotsPerPage = 3;
+  var maxPlotsPerPage = 10;
   var userData = [];
+
+  var showMoreButton = function(start){
+    $(selectors.showMore).unbind('click').click(function(){
+      _gaq.push(['_trackPageview', '/' + username + '/' + parseInt(1 + (start/maxPlotsPerPage), 10)]);
+      $(selectors.showMore).addClass("hide");
+      var end = Math.min(userData.length, start + maxPlotsPerPage);
+      plot(start, end);
+      return false;
+    });
+
+    $(selectors.showMore).removeClass("hide");
+  };
 
   this.init = function(){
     $(selectors.loading).html("Loading stats for " + username + "...");
@@ -64,7 +77,9 @@ var UserView = function(){
             fetched ++;
             if(fetched == data.length){
               addDetails();
-              plot(0, Math.min(data.length, maxPlotsPerPage));
+
+              var end = Math.min(data.length, maxPlotsPerPage);
+              plot(0, end);
             }
 
           }).fail(function(){
@@ -76,99 +91,103 @@ var UserView = function(){
     }).fail(function(){
       return $(selectors.loading).html("An error occurred while trying to retrieve the results");
     });
+  };
 
-    var addDetails = function(){
-      $(selectors.loading).html("Rendering the details...");
-      var userTotal = 0,
-          userLastMonth = 0;
+  var addDetails = function(){
+    $(selectors.loading).html("Rendering the details...");
+    var userTotal = 0,
+        userLastMonth = 0;
 
-      for(var i = 0; i < userData.length; i++){
-        var data = userData[i],
-            div = data.div + "-details",
-            total = 0,
-            lastMonth = 0,
-            max = null,
-            now = new Date();
+    for(var i = 0; i < userData.length; i++){
+      var data = userData[i],
+          div = data.div + "-details",
+          total = 0,
+          lastMonth = 0,
+          max = null,
+          now = new Date();
 
-            now.setMonth(now.getMonth() - 1);
+          now.setMonth(now.getMonth() - 1);
 
-            var todayOneMonthAgo = now.toJSON().substr(0, 10);
+          var todayOneMonthAgo = now.toJSON().substr(0, 10);
 
-        for(var j = 0; j < data.downloads.length; j++){
-          total += data.downloads[j][1];
-          userTotal += data.downloads[j][1];
+      for(var j = 0; j < data.downloads.length; j++){
+        total += data.downloads[j][1];
+        userTotal += data.downloads[j][1];
 
-          if(data.downloads[j][0] >= todayOneMonthAgo){
-            lastMonth += data.downloads[j][1];
-            userLastMonth += data.downloads[j][1];
-          }
-
-          if(!max)
-            max = data.downloads[j];
-          else if(data.downloads[j][1] >= max[1])
-            max = data.downloads[j];
+        if(data.downloads[j][0] >= todayOneMonthAgo){
+          lastMonth += data.downloads[j][1];
+          userLastMonth += data.downloads[j][1];
         }
 
-        $("#" + div).html(templates.repositoryDetails(data.repository, total, lastMonth, max));
+        if(!max)
+          max = data.downloads[j];
+        else if(data.downloads[j][1] >= max[1])
+          max = data.downloads[j];
       }
-      $(selectors.userInfo).html(templates.userInfo(userData.length, userTotal, userLastMonth));
-    };
 
-    var plot = function(start, end){
-      $(selectors.loading).html("Plotting the data...");
-      for(var i = start; i < end; i++){
-      
-        var data = userData[i];
+      $("#" + div).html(templates.repositoryDetails(data.repository, total, lastMonth, max));
+    }
+    $(selectors.userInfo).html(templates.userInfo(userData.length, userTotal, userLastMonth));
+  };
 
-        var options = {
-          title: {
-            text: data.repository,
-            color: '#F1F1F1'
-          },
-          animate: true,
-          grid: {
-            background: '#000000', textColor: '#F1F1F1'
-          },
-          seriesDefaults:{
-            rendererOptions: {
-              showDataLabels: true
-            }
-          },
-          highlighter: {
-            show: true,
-            sizeAdjust: 7.5
-          },
-          axesDefaults: {
-            labelRenderer: $.jqplot.CanvasAxisLabelRenderer
-          },
-          axes: {
-            xaxis: { 
-              label: "Date", 
-              renderer: $.jqplot.DateAxisRenderer,
-              pad: 0
-            },
-            yaxis: { 
-              label: "Downloads", 
-            }
-          },
-          series: [{
-            showMarker: false, 
-            pointLabels: { show: true },
-            label: 'Downloads', 
-            color: '#CC3D33'
-          }]
-        };
+  var plot = function(start, end){
+    $(selectors.loading).html("Plotting the data...");
+    for(var i = start; i < end; i++){
+    
+      var data = userData[i];
 
-        $("#" + data.div + "-repository").removeClass("hide");
+      var options = {
+        title: {
+          text: data.repository,
+          color: '#F1F1F1'
+        },
+        animate: false,
+        grid: {
+          background: '#000000', textColor: '#F1F1F1'
+        },
+        seriesDefaults:{
+          rendererOptions: {
+            showDataLabels: true
+          }
+        },
+        highlighter: {
+          show: true,
+          sizeAdjust: 7.5
+        },
+        axesDefaults: {
+          labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+        },
+        axes: {
+          xaxis: { 
+            label: "Date", 
+            renderer: $.jqplot.DateAxisRenderer,
+            pad: 0
+          },
+          yaxis: { 
+            label: "Downloads", 
+          }
+        },
+        series: [{
+          showMarker: false, 
+          pointLabels: { show: true },
+          label: 'Downloads', 
+          color: '#CC3D33'
+        }]
+      };
 
-        if(data.downloads.length == 0)
-          $("#" + data.div + "-chart").html("No data to plot");
-        else
-          var plot = $.jqplot(data.div + "-chart", [data.downloads], options);
+      $("#" + data.div + "-repository").removeClass("hide");
 
-      }
-      $(selectors.loading).html("");
-    };
+      if(data.downloads.length == 0)
+        $("#" + data.div + "-chart").html("No data to plot");
+      else
+        var plot = $.jqplot(data.div + "-chart", [data.downloads], options);
+
+    }
+
+    if(end < userData.length)
+      showMoreButton(end);
+
+    $(selectors.loading).html("");
   };
 };
 

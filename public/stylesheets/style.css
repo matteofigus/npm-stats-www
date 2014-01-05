@@ -68,5 +68,11 @@ a {
 }
 
 .hide {
-  display: none;
+  display: none !important;
+}
+
+#show-more {
+  margin-bottom: 50px;
+  display: block;
+  font-size: 20px;
 }
