@@ -4,7 +4,8 @@ var UserView = function(){
     loading: "#loading",
     repositories: "#repositories",
     userInfo: "#user-info",
-    showMore: "#show-more"
+    showMore: "#show-more",
+    twitterShare: ".twitter-share"
   };
 
   var endpoints = {
@@ -18,7 +19,9 @@ var UserView = function(){
 
   var templates = {
     userInfo: function(repositoryCount, total, lastMonth){
-      return "Modules: " + repositoryCount + "<br />Total downloads: " + total + "<br />Downloads last month: " + lastMonth;
+      var s = "Modules: " + repositoryCount + "<br />Total downloads: " + total + "<br />Downloads last month: " + lastMonth;
+      
+      return s;
     },
     repositoryDiv: function(divId, repository){
       return "<div id=\"" + divId + "-repository\"class=\"repository hide\"><div class=\"chart\" id=\"" + divId + "-chart\"></div><div class=\"repository-details\" id=\"" + divId + "-details\"></div></div>";
@@ -34,6 +37,9 @@ var UserView = function(){
         s += "Last peak: " + max[0] + " (" + max[1] + ")";
 
       return s;
+    },
+    shareViaTwitter: function(lastMonth){
+      return "<a href=\"https://twitter.com/intent/tweet?button_hashtag=npm-stats&text=Wow!%20" + lastMonth + "%20downloads%20to%20my%20npm%20modules%20this%20month\" data-hashtags=\"npm-stats\" data-url=\"http://www.npm-stats.com/" + username + "\" class=\"twitter-hashtag-button\">Tweet #npm-stats</a>"
     }
   };
 
@@ -53,6 +59,7 @@ var UserView = function(){
   };
 
   this.init = function(){
+
     $(selectors.loading).html("Loading stats for " + username + "...");
     $.get(endpoints.repositoriesByUser(username), function(data){    
       if(data && data.error)
@@ -128,6 +135,21 @@ var UserView = function(){
       $("#" + div).html(templates.repositoryDetails(data.repository, total, lastMonth, max));
     }
     $(selectors.userInfo).html(templates.userInfo(userData.length, userTotal, userLastMonth));
+
+    loadTwitterWidget(userLastMonth);    
+  };
+
+  var loadTwitterWidget = function(lastMonth){
+
+    $(selectors.twitterShare).html(templates.shareViaTwitter(lastMonth));
+    $(selectors.twitterShare).removeClass("hide");
+
+    twttr.ready(function(twttr) {       
+      twttr.events.bind('tweet', function (event) {
+        _gaq.push(['_trackEvent', "Engagement", "Share-Twitter", username]);
+      });
+      twttr.widgets.load();
+    });
   };
 
   var plot = function(start, end){
