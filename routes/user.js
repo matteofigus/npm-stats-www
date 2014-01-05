@@ -45,6 +45,16 @@ exports.repositories = function(req, res){
   var registry = npmStats();
 
   registry.user(userName).list(function(err, data){
-    res.json(err ? err : data);
+    if(err)
+      res.json(400, { error: true, message: "api error", details: err});
+    else {
+      var mapped = [];
+
+      for(var i = 0; i < data.length; i++)
+        if(data[i] && data[i] != '')
+          mapped.push(data[i]);
+
+      res.json(mapped);
+    }
   });
 };
