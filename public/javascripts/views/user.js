@@ -20,7 +20,7 @@ var UserView = function(){
   var templates = {
     userInfo: function(repositoryCount, total, lastMonth){
       var s = "Modules: " + repositoryCount + "<br />Total downloads: " + total + "<br />Downloads last month: " + lastMonth;
-      
+
       return s;
     },
     repositoryDiv: function(divId, repository){
@@ -34,12 +34,13 @@ var UserView = function(){
         s += "Last month: " + lastMonth + "<br />";
 
       if(max)
-        s += "Last peak: " + max[0] + " (" + max[1] + ")";
+        s += "Last peak: " + max[0] + " (" + max[1] + ")<br /><br />";
 
+      s += templates.shareViaTwitter("Wow! " + total + " downloads for " + repository + "!");
       return s;
     },
-    shareViaTwitter: function(lastMonth){
-      return "<a href=\"https://twitter.com/intent/tweet?button_hashtag=npmstats&text=Wow!%20" + lastMonth + "%20downloads%20to%20my%20npm%20modules%20this%20month!\" data-hashtags=\"npmstats, npm, nodejs\" data-url=\"http://www.npm-stats.com/" + username + "\" class=\"twitter-hashtag-button\">Tweet #npm-stats</a>"
+    shareViaTwitter: function(msg){
+      return "<a href=\"https://twitter.com/intent/tweet?button_hashtag=npmstats&text=" + msg.replace(/ /g, "%20") + "\" data-hashtags=\"npmstats, npm, nodejs\" data-url=\"http://www.npm-stats.com/" + username + "\" class=\"twitter-hashtag-button\">Tweet #npmstats</a>"
     }
   };
 
@@ -141,7 +142,7 @@ var UserView = function(){
 
   var loadTwitterWidget = function(lastMonth){
 
-    $(selectors.twitterShare).html(templates.shareViaTwitter(lastMonth));
+    $(selectors.twitterShare).html(templates.shareViaTwitter("Wow! " + lastMonth + " downloads to my npm modules this month!"));
     $(selectors.twitterShare).removeClass("hide");
 
     twttr.ready(function(twttr) {       
