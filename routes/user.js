@@ -19,12 +19,22 @@ exports.downloads = function(req, res){
     if(err)
       res.json(400, { error: true, message: "api error", details: err});
     else {
-      var mapped = [];
-      
-      for(var i = 0; i < data.length; i++)
-        mapped.push([data[i].date, data[i].value]);
+      if(req.query.checkItExists && (!data || data.length == 0)){
+        registry.module(repoName).info(function(err, data){
+          if(err)
+            res.json({ error: true, message: (err.reason == 'missing' ? "The module is missing" : err.reason), details: err });
+          else {
+            res.json(200, []);
+          }
+        });
+      } else {
+        var mapped = [];
+        
+        for(var i = 0; i < data.length; i++)
+          mapped.push([data[i].date, data[i].value]);
 
-      res.json(mapped);
+        res.json(mapped);
+      }
     }
   });
 };

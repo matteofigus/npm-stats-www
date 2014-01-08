@@ -3,8 +3,6 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-    meta(name="description", content="NPN stats displays metrics about npm modules")
-    meta(name="keywords", content="npm, node, nodejs, node.js, stats, metrics, module")
     meta(name="robots", content="index, follow")
     meta(name="language", content="EN")
     meta(name="author", content="Matteo Figus")
@@ -46,6 +44,11 @@ html
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
 
+      var maxPlotsPerPage = 10;
+
     script(src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js")
+    script(src="/javascripts/templates.js")
+    script(src="/javascripts/endpoints.js")
     script(src="/javascripts/search.js")
+    script(src="/javascripts/plot.js")
     block scripts

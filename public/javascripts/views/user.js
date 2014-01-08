@@ -4,60 +4,10 @@ var UserView = function(){
     loading: "#loading",
     repositories: "#repositories",
     userInfo: "#user-info",
-    showMore: "#show-more",
     twitterShare: ".twitter-share"
   };
 
-  var endpoints = {
-    repositoriesByUser: function(username){
-      return '/~repositories/' + username;
-    },
-    downloadsByRepository: function(repository){
-      return '/~downloads/' + repository;
-    }
-  };
-
-  var templates = {
-    userInfo: function(repositoryCount, total, lastMonth){
-      var s = "Modules: " + repositoryCount + "<br />Total downloads: " + total + "<br />Downloads last month: " + lastMonth;
-
-      return s;
-    },
-    repositoryDiv: function(divId, repository){
-      return "<div id=\"" + divId + "-repository\"class=\"repository hide\"><div class=\"chart\" id=\"" + divId + "-chart\"></div><div class=\"repository-details\" id=\"" + divId + "-details\"></div></div>";
-    },
-    repositoryDetails: function(repository, total, lastMonth, max){
-      var s = "<h2>" + repository + "</h2><a href=\"https://www.npmjs.org/package/" + repository + 
-              "\" target=\"blank\">open on npm</a><br /><br />Total downloads: " + total + "<br />";
-      
-      if(lastMonth >= 0)
-        s += "Last month: " + lastMonth + "<br />";
-
-      if(max)
-        s += "Last peak: " + max[0] + " (" + max[1] + ")<br /><br />";
-
-      s += templates.shareViaTwitter("Wow! " + total + " downloads for " + repository + "!");
-      return s;
-    },
-    shareViaTwitter: function(msg){
-      return "<a href=\"https://twitter.com/intent/tweet?button_hashtag=npmstats&text=" + msg.replace(/ /g, "%20") + "\" data-hashtags=\"npmstats, npm, nodejs\" data-url=\"http://www.npm-stats.com/" + username + "\" class=\"twitter-hashtag-button\">Tweet #npmstats</a>"
-    }
-  };
-
-  var maxPlotsPerPage = 10;
   var userData = [];
-
-  var showMoreButton = function(start){
-    $(selectors.showMore).unbind('click').click(function(){
-      _gaq.push(['_trackPageview', '/' + username + '/' + parseInt(1 + (start/maxPlotsPerPage), 10)]);
-      $(selectors.showMore).addClass("hide");
-      var end = Math.min(userData.length, start + maxPlotsPerPage);
-      plot(start, end);
-      return false;
-    });
-
-    $(selectors.showMore).removeClass("hide");
-  };
 
   this.init = function(){
 
@@ -89,9 +39,10 @@ var UserView = function(){
             fetched ++;
             if(fetched == data.length){
               addDetails();
-
               var end = Math.min(data.length, maxPlotsPerPage);
-              plot(0, end);
+              $(selectors.loading).html("Plotting the data...");
+              plot(userData, 0, end);
+              $(selectors.loading).html("");
             }
 
           }).fail(function(){
@@ -146,7 +97,7 @@ var UserView = function(){
 
   var loadTwitterWidget = function(lastMonth){
 
-    $(selectors.twitterShare).html(templates.shareViaTwitter("Wow! " + lastMonth + " downloads to my npm modules this month!"));
+    $(selectors.twitterShare).html(templates.shareViaTwitter("Wow! " + lastMonth + " downloads to my npm modules this month!", "http://www.npm-stats/" + username));
     $(selectors.twitterShare).removeClass("hide");
 
     twttr.ready(function(twttr) {       
@@ -157,65 +108,6 @@ var UserView = function(){
     });
   };
 
-  var plot = function(start, end){
-    $(selectors.loading).html("Plotting the data...");
-    for(var i = start; i < end; i++){
-    
-      var data = userData[i];
-
-      var options = {
-        title: {
-          text: data.repository,
-          color: '#F1F1F1'
-        },
-        animate: false,
-        grid: {
-          background: '#000000', textColor: '#F1F1F1'
-        },
-        seriesDefaults:{
-          rendererOptions: {
-            showDataLabels: true
-          }
-        },
-        highlighter: {
-          show: true,
-          sizeAdjust: 7.5
-        },
-        axesDefaults: {
-          labelRenderer: $.jqplot.CanvasAxisLabelRenderer
-        },
-        axes: {
-          xaxis: { 
-            label: "Date", 
-            renderer: $.jqplot.DateAxisRenderer,
-            pad: 0
-          },
-          yaxis: { 
-            label: "Downloads", 
-          }
-        },
-        series: [{
-          showMarker: false, 
-          pointLabels: { show: true },
-          label: 'Downloads', 
-          color: '#CC3D33'
-        }]
-      };
-
-      $("#" + data.div + "-repository").removeClass("hide");
-
-      if(data.downloads.length == 0)
-        $("#" + data.div + "-chart").html("No data to plot");
-      else
-        var plot = $.jqplot(data.div + "-chart", [data.downloads], options);
-
-    }
-
-    if(end < userData.length)
-      showMoreButton(end);
-
-    $(selectors.loading).html("");
-  };
 };
 
 var view = new UserView();
