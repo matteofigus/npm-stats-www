@@ -49,6 +49,7 @@ app.get('/~downloads/:repository', user.downloads);
 app.get('/~info/:repository', user.info);
 app.get('/~repositories/:username', user.repositories);
 
+app.get('/~packages/:repository', user.repository);
 app.get('/:username', user.index);
 
 http.createServer(app).listen(app.get('port'), function(){

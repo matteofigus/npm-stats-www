@@ -1,0 +1,27 @@
+extends layout
+
+block head
+  | <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="/javascripts/vendor/excanvas.min.js" /><![endif]-->
+  script(language="javascript", type="text/javascript").
+    window.repository = "#{repository}";
+
+  link(rel='stylesheet', href='/stylesheets/jquery.jqplot.min.css')
+  link(rel='stylesheet', href='/stylesheets/jqplot.custom.css')
+
+block scripts
+  script(src="/javascripts/vendor/jquery.jqplot.min.js")
+  script(src="/javascripts/vendor/jqplot.canvasAxisLabelRenderer.min.js")
+  script(src="/javascripts/vendor/jqplot.canvasTextRenderer.min.js")
+  script(src="/javascripts/vendor/jqplot.dateAxisRenderer.min.js")
+  script(src="/javascripts/vendor/jqplot.highlighter.min.js")
+  script.
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+
+
+  script(src="/javascripts/views/repository.js")
+
+
+block content
+  h1=title
+  div#loading
+  div#repositories

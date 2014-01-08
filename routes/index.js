@@ -1,3 +1,3 @@
 exports.index = function(req, res){
-  res.render('index', { title: 'Npm-stats' });
+  res.render('index', { title: 'Npm-stats', username: '', repository: '' });
 };

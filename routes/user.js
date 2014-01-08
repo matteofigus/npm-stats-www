@@ -1,7 +1,11 @@
 var npmStats = require('npm-stats');
 
 exports.index = function(req, res){
-  res.render('user', { title: 'Stats for ' + req.params.username, username: req.params.username });
+  res.render('user', { title: 'Stats for ' + req.params.username, username: req.params.username, repository: '' });
+};
+
+exports.repository = function(req, res){
+  res.render('repository', { title: 'Stats for ' + req.params.repository, username: '', repository: req.params.repository });
 };
 
 exports.downloads = function(req, res){

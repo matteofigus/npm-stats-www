@@ -17,8 +17,14 @@ html
 
     block content
 
+    p Search for a user in NPM:
     form#user-form
       input.username(type="text", value=username)
+      a.submit(href="#") Go
+
+    p Search for a module in NPM:
+    form#repository-form
+      input.repositoryname(type="text", value=repository)
       a.submit(href="#") Go
 
     div.social
@@ -38,5 +44,5 @@ html
       })();
 
     script(src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js")
-    script(src="/javascripts/search-username.js")
+    script(src="/javascripts/search.js")
     block scripts
