@@ -37,7 +37,7 @@ var RepositoryView = function(){
       return s;
     },
     shareViaTwitter: function(msg){
-      return "<a href=\"https://twitter.com/intent/tweet?button_hashtag=npmstats&text=" + msg.replace(/ /g, "%20") + "\" data-hashtags=\"npmstats, npm, nodejs\" data-url=\"http://www.npm-stats.com/~package/" + repository + "\" class=\"twitter-hashtag-button\">Tweet #npmstats</a>"
+      return "<a href=\"https://twitter.com/intent/tweet?button_hashtag=npmstats&text=" + msg.replace(/ /g, "%20") + "\" data-hashtags=\"npmstats, npm, nodejs\" data-url=\"http://www.npm-stats.com/~packages/" + repository + "\" class=\"twitter-hashtag-button\">Tweet #npmstats</a>"
     }
   };
 

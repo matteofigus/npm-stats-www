@@ -17,15 +17,18 @@ html
 
     block content
 
-    p Search for a user in NPM:
-    form#user-form
-      input.username(type="text", value=username)
-      a.submit(href="#") Go
+    div.forms
+      div.form-half.forms-border
+        p Search for a user in NPM:
+        form#user-form
+          input.username(type="text", value=username)
+          a.submit(href="#") Go
 
-    p Search for a module in NPM:
-    form#repository-form
-      input.repositoryname(type="text", value=repository)
-      a.submit(href="#") Go
+      div.form-half
+        p Search for a module in NPM:
+        form#repository-form
+          input.repositoryname(type="text", value=repository)
+          a.submit(href="#") Go
 
     div.social
       iframe(allowtransparency="true", frameborder="0", scrolling="no", src="//platform.twitter.com/widgets/follow_button.html?screen_name=matteofigus", style="width:230px; height:20px;")

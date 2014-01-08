@@ -80,3 +80,16 @@ a {
 .twitter-share {
   margin-top: 10px;
 }
+
+.form-half {
+  width: 240px;
+  float: left;
+}
+
+.forms {
+  display: inline-block;
+}
+
+.forms-border {
+  border-right: dotted 1px #8A8686;
+}
