@@ -92,3 +92,15 @@ a {
 .forms-border {
   border-right: dotted 1px #8A8686;
 }
+
+.col {
+  margin:10px;
+  float: none;
+  display: inline-block;
+}
+
+.n {
+  font-size: 40px;
+  font-weight: bold;
+  color: #CC3D33;
+}

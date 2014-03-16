@@ -1,6 +1,8 @@
 window.templates = {
   userInfo: function(repositoryCount, total, lastMonth){
-    var s = "Modules: " + repositoryCount + "<br />Total downloads: " + total + "<br />Downloads last month: " + lastMonth;
+    var s = "<div class=\"col\"><div class=\"n\">" + repositoryCount + "</div><div class=\"t\">modules</div></div>";
+    s += "<div class=\"col\"><div class=\"n\">" + total + "</div><div class=\"t\">total downloads</div></div>";
+    s += "<div class=\"col\"><div class=\"n\">" + lastMonth + "</div><div class=\"t\">downloads last month</div></div>";
 
     return s;
   },
