@@ -97,7 +97,7 @@ var UserView = function(){
 
   var loadTwitterWidget = function(lastMonth){
 
-    $(selectors.twitterShare).html(templates.shareViaTwitter("Wow! " + lastMonth + " downloads to my npm modules this month!", "http://www.npm-stats/" + username));
+    $(selectors.twitterShare).html(templates.shareViaTwitter("Wow! " + lastMonth + " downloads to my npm modules this month!", "http://www.npm-stats.com/" + username));
     $(selectors.twitterShare).removeClass("hide");
 
     twttr.ready(function(twttr) {       
