@@ -1,3 +1,4 @@
+var superagent = require('superagent');
 var npmStats = require('npm-stats');
 
 exports.index = function(req, res){
@@ -15,26 +16,23 @@ exports.downloads = function(req, res){
 
   var registry = npmStats();
 
-  registry.module(repoName).downloads(function(err, data){
+  registry.module(repoName).info(function(err, data){
     if(err)
-      res.json(400, { error: true, message: "api error", details: err});
+      res.json({ error: true, message: (err.reason == 'missing' ? "The module is missing" : err.reason), details: err });
     else {
-      if(req.query.checkItExists && (!data || data.length == 0)){
-        registry.module(repoName).info(function(err, data){
-          if(err)
-            res.json({ error: true, message: (err.reason == 'missing' ? "The module is missing" : err.reason), details: err });
-          else {
-            res.json(200, []);
-          }
-        });
-      } else {
-        var mapped = [];
+
+      var url = "https://api.npmjs.org/downloads/range/" + (new Date(data.time.created)).toISOString().split('T')[0] +":" + (new Date()).toISOString().split('T')[0] + "/" + repoName;
+
+      superagent.get(url).end(function(response){
+
+        var data = response.body.downloads,
+            mapped = [];
         
         for(var i = 0; i < data.length; i++)
-          mapped.push([data[i].date, data[i].value]);
+          mapped.push([data[i].day, data[i].downloads]);
 
         res.json(mapped);
-      }
+      });
     }
   });
 };
