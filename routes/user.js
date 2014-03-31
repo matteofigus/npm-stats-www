@@ -25,6 +25,12 @@ exports.downloads = function(req, res){
 
       superagent.get(url).end(function(response){
 
+        if(data.error)
+          return res.json({
+            error: true,
+            message: data.error
+          });
+
         var data = response.body.downloads,
             mapped = [];
         
