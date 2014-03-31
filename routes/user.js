@@ -25,7 +25,7 @@ exports.downloads = function(req, res){
 
       superagent.get(url).end(function(response){
 
-        if(data.error)
+        if(response.body.error)
           return res.json({
             error: true,
             message: data.error
