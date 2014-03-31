@@ -28,7 +28,7 @@ exports.downloads = function(req, res){
         if(response.body.error)
           return res.json({
             error: true,
-            message: data.error
+            message: response.body.error
           });
 
         var data = response.body.downloads,
