@@ -23,6 +23,6 @@ window.templates = {
     return s;
   },
   shareViaTwitter: function(msg, url){
-    return "<a href=\"https://twitter.com/intent/tweet?button_hashtag=npmstats&text=" + msg.replace(/ /g, "%20") + "\" data-hashtags=\"npmstats, npm, nodejs\" data-url=\"" + url + "\" class=\"twitter-hashtag-button\">Tweet #npmstats</a>"
+    return "<a href=\"https://twitter.com/intent/tweet?button_hashtag=npmstats&text=" + msg.replace(/ /g, "%20") + "\" data-hashtags=\"npmstats, npm, nodejs\" data-url=\"" + url + "\" class=\"twitter-hashtag-button-hide\">Tweet #npmstats</a>"
   }
 };

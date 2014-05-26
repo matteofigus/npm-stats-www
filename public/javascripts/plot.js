@@ -1,4 +1,4 @@
-var showMoreButton = function(start, data){
+var showMoreButton = function(start, data, callback){
   var selectors = {
     loading: "#loading",
     showMore: "#show-more"
@@ -9,16 +9,20 @@ var showMoreButton = function(start, data){
     $(selectors.showMore).addClass("hide");
     var end = Math.min(data.length, start + maxPlotsPerPage);
     $(selectors.loading).html("Plotting the data...");
-    plot(data, start, end);
+    plot(data, start, end, callback);
     $(selectors.loading).html("");
+
     return false;
   });
+
+  if(!!callback && typeof(callback) === 'function')
+    callback();
 
   $(selectors.showMore).removeClass("hide");
 };
 
 
-window.plot = function(plotData, start, end){
+window.plot = function(plotData, start, end, callback){
   for(var i = start; i < end; i++){
   
     var data = plotData[i];
@@ -61,6 +65,7 @@ window.plot = function(plotData, start, end){
         color: '#CC3D33'
       }]
     };
+    $(".twitter-hashtag-button-hide", "#" + data.div + "-repository").addClass("twitter-hashtag-button").removeClass("twitter-hashtag-button-hide");
 
     $("#" + data.div + "-repository").removeClass("hide");
 
@@ -72,5 +77,8 @@ window.plot = function(plotData, start, end){
   }
 
   if(end < plotData.length)
-    showMoreButton(end, plotData);
+    showMoreButton(end, plotData, callback);
+  else if(!!callback && typeof(callback) === 'function')
+    callback();
+
 };

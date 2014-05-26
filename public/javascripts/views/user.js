@@ -4,7 +4,8 @@ var UserView = function(){
     loading: "#loading",
     repositories: "#repositories",
     userInfo: "#user-info",
-    twitterShare: ".twitter-share"
+    twitterShare: ".twitter-share",
+    twitterShareLink: ".twitter-share a"
   };
 
   var userData = [];
@@ -37,11 +38,20 @@ var UserView = function(){
             userData.push({ repository: repository, div: div, downloads: downloads});
 
             fetched ++;
-            if(fetched == data.length){
+            if(fetched == data.length){ 
+              userData = userData.sort(function(a, b){
+                if(a.repository > b.repository)
+                  return 1;
+                else if(a.repository < b.repository)
+                  return -1;
+
+                return 0;
+              });
+
               addDetails();
               var end = Math.min(data.length, maxPlotsPerPage);
               $(selectors.loading).html("Plotting the data...");
-              plot(userData, 0, end);
+              plot(userData, 0, end, loadTwitterWidget);
               $(selectors.loading).html("");
             }
 
@@ -92,13 +102,14 @@ var UserView = function(){
     }
     $(selectors.userInfo).html(templates.userInfo(userData.length, userTotal, userLastMonth));
 
-    loadTwitterWidget(userLastMonth);    
+    $(selectors.twitterShare).html(templates.shareViaTwitter("Wow! " + userLastMonth + " downloads to my npm modules this month!", "http://www.npm-stats.com/" + username));
+    $(selectors.twitterShare).removeClass("hide");
+    $(selectors.twitterShareLink).addClass("twitter-hashtag-button").removeClass("twitter-hashtag-button-hide");
+
+    loadTwitterWidget();    
   };
 
-  var loadTwitterWidget = function(lastMonth){
-
-    $(selectors.twitterShare).html(templates.shareViaTwitter("Wow! " + lastMonth + " downloads to my npm modules this month!", "http://www.npm-stats.com/" + username));
-    $(selectors.twitterShare).removeClass("hide");
+  var loadTwitterWidget = function(){
 
     twttr.ready(function(twttr) {       
       twttr.events.bind('tweet', function (event) {

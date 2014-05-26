@@ -21,7 +21,7 @@ var RepositoryView = function(){
       repositoryData.push({ repository: repository, div: div, downloads: downloads});
       addDetails();
       $(selectors.loading).html("Plotting the data...");
-      plot(repositoryData, 0, 1);
+      plot(repositoryData, 0, 1, loadTwitterWidget);
       $(selectors.loading).html("");
 
     }).fail(function(){
