@@ -21,7 +21,10 @@ exports.downloads = function(req, res){
       res.json({ error: true, message: (err.reason == 'missing' ? "The module is missing" : err.reason), details: err });
     else {
 
-      var url = "https://api.npmjs.org/downloads/range/" + (new Date(data.time.created)).toISOString().split('T')[0] +":" + (new Date()).toISOString().split('T')[0] + "/" + repoName;
+      var ctime = (data.time && data.time.created) ? data.time.created : (data.ctime || '2009-01-01T00:00:00Z'),
+          cdate = (new Date(ctime)).toISOString().split('T')[0],
+          nowDate = (new Date()).toISOString().split('T')[0],
+          url = "https://api.npmjs.org/downloads/range/" + cdate + ":" + nowDate + "/" + repoName;
 
       superagent.get(url).end(function(response){
 
