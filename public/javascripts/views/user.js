@@ -23,7 +23,7 @@ var UserView = function(){
       $(selectors.loading).html("Loading downloads (0/" + data.length + ")...");
       for(var i = 0; i < data.length; i++){
         var fetched = 0,
-            divId = username + "-" + data[i].replace(/\./g, "-");
+            divId = username.replace(".","-") + "-" + data[i].replace(/\./g, "-");
             
         while ($("#" + divId).length) {
           divId += "-";
