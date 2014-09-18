@@ -1,3 +1,5 @@
+var maxPlotsPerPage = 10;
+
 var showMoreButton = function(start, data, callback){
   var selectors = {
     loading: "#loading",
@@ -20,7 +22,6 @@ var showMoreButton = function(start, data, callback){
 
   $(selectors.showMore).removeClass("hide");
 };
-
 
 window.plot = function(plotData, start, end, callback){
   for(var i = start; i < end; i++){
