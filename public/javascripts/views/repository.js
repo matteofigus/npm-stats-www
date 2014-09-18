@@ -61,13 +61,14 @@ var RepositoryView = function(){
   };
 
   var loadTwitterWidget = function(){
-
-    twttr.ready(function(twttr) {       
-      twttr.events.bind('tweet', function (event) {
-        _gaq.push(['_trackEvent', "Engagement", "Share-Twitter-Module", repository]);
+    if(!!window.twttr){
+      twttr.ready(function(twttr) {       
+        twttr.events.bind('tweet', function (event) {
+          _gaq.push(['_trackEvent', "Engagement", "Share-Twitter-Module", repository]);
+        });
+        twttr.widgets.load();
       });
-      twttr.widgets.load();
-    });
+    }
   };
 };
 

@@ -110,13 +110,14 @@ var UserView = function(){
   };
 
   var loadTwitterWidget = function(){
-
-    twttr.ready(function(twttr) {       
-      twttr.events.bind('tweet', function (event) {
-        _gaq.push(['_trackEvent', "Engagement", "Share-Twitter", username]);
+    if(!!window.twttr){
+      twttr.ready(function(twttr) {       
+        twttr.events.bind('tweet', function (event) {
+          _gaq.push(['_trackEvent', "Engagement", "Share-Twitter", username]);
+        });
+        twttr.widgets.load();
       });
-      twttr.widgets.load();
-    });
+    }
   };
 
 };
