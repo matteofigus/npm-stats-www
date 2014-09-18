@@ -17,14 +17,14 @@ html
 
     div.forms
       div.form-half.forms-border
-        p Search for a user in NPM:
+        p Search for a user in npm:
         form#user-form(action="/~redir")
           input.username(type="text", value=username, name="username")
           input(type="hidden", name="action", value="user")
           a.submit(href="#") Go
 
       div.form-half
-        p Search for a module in NPM:
+        p Search for a module in npm:
         form#repository-form(action="/~redir")
           input.repositoryname(type="text", value=repository, name="repositoryname")
           input(type="hidden", name="action", value="repository")
