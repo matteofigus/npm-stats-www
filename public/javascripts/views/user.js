@@ -32,10 +32,10 @@ var UserView = function(){
         $(selectors.repositories).append(templates.repositoryDiv(divId, data[i]));
 
         (function(repository, endpoint, div){
-          $.get(endpoint, function(downloads){
+          $.get(endpoint, function(info){
 
             $(selectors.loading).html("Loading downloads (" + fetched + "/" + data.length + ")...");
-            userData.push({ repository: repository, div: div, downloads: downloads});
+            userData.push({ repository: repository, div: div, downloads: info.downloads, maintainers: info.maintainers });
 
             fetched ++;
             if(fetched == data.length){ 
@@ -98,7 +98,7 @@ var UserView = function(){
           max = data.downloads[j];
       }
 
-      $("#" + div).html(templates.repositoryDetails(data.repository, total, lastMonth, max));
+      $("#" + div).html(templates.repositoryDetails(data.repository, data.maintainers, total, lastMonth, max));
     }
     $(selectors.userInfo).html(templates.userInfo(userData.length, userTotal, userLastMonth));
 
@@ -124,7 +124,5 @@ var UserView = function(){
 
 var view = new UserView();
 
-$(function(){
-  view.init();
-});
+$(view.init);
 

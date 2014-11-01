@@ -3,6 +3,6 @@ window.endpoints = {
     return '/~repositories/' + username;
   },
   downloadsByRepository: function(repository, checkItExists){
-    return '/~downloads/' + repository + (checkItExists ? "?checkItExists=true" : "");
+    return '/~info/' + repository + (checkItExists ? "?checkItExists=true" : "");
   }
 };

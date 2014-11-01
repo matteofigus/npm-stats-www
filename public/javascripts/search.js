@@ -32,8 +32,6 @@ var Search = function(){
 
 var search = new Search();
 
-$(function(){
-  search.init();
-});
+$(search.init);
 
 

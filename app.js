@@ -38,7 +38,6 @@ var home = require('./routes/index');
 var user = require('./routes/user');
 
 // API
-app.get('/~downloads/:repository', user.downloads);
 app.get('/~info/:repository', user.info);
 app.get('/~repositories/:username', user.repositories);
 

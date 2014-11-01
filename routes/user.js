@@ -9,7 +9,7 @@ exports.repository = function(req, res){
   res.render('repository', { title: 'Stats for ' + req.params.repository, username: '', repository: req.params.repository });
 };
 
-exports.downloads = function(req, res){
+exports.info = function(req, res){
   var repoName = req.params.repository;
   if(!repoName)
     res.json(500, { error: true, message: "not valid repository"});
@@ -24,7 +24,8 @@ exports.downloads = function(req, res){
       var ctime = (data.time && data.time.created) ? data.time.created : (data.ctime || '2009-01-01T00:00:00Z'),
           cdate = (new Date(ctime)).toISOString().split('T')[0],
           nowDate = (new Date()).toISOString().split('T')[0],
-          url = "https://api.npmjs.org/downloads/range/" + cdate + ":" + nowDate + "/" + repoName;
+          url = "https://api.npmjs.org/downloads/range/" + cdate + ":" + nowDate + "/" + repoName,
+          maintainers = data.maintainers;
 
       superagent.get(url).end(function(response){
 
@@ -35,26 +36,21 @@ exports.downloads = function(req, res){
           });
 
         var data = response.body.downloads,
-            mapped = [];
+            mappedDownloads = [],
+            mappedMaintainers = [];
         
         for(var i = 0; i < data.length; i++)
-          mapped.push([data[i].day, data[i].downloads]);
+          mappedDownloads.push([data[i].day, data[i].downloads]);
 
-        res.json(mapped);
+        for(var i = 0; i < maintainers.length; i++)
+          mappedMaintainers.push(maintainers[i].name);
+
+        res.json({
+          downloads: mappedDownloads,
+          maintainers: mappedMaintainers
+        });
       });
     }
-  });
-};
-
-exports.info = function(req, res){
-  var repoName = req.params.repository;
-  if(!repoName)
-    res.json(500, { error: true, message: "not valid repository"});
-
-  var registry = npmStats();
-
-  registry.module(repoName).info(function(err, data){
-    res.json(err ? err : data);
   });
 };
 

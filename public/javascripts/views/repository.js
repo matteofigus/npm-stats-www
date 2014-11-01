@@ -14,11 +14,11 @@ var RepositoryView = function(){
     $(selectors.loading).html("Loading downloads for " + repository + "...");
     $(selectors.repositories).append(templates.repositoryDiv(div, repository));
 
-    $.get(endpoints.downloadsByRepository(repository, true), function(downloads){
-      if(downloads.error)
-        return $(selectors.loading).html(downloads.message);
+    $.get(endpoints.downloadsByRepository(repository, true), function(response){
+      if(response.error)
+        return $(selectors.loading).html(response.message);
 
-      repositoryData.push({ repository: repository, div: div, downloads: downloads});
+      repositoryData.push({ repository: repository, div: div, downloads: response.downloads, maintainers: response.maintainers });
       addDetails();
       $(selectors.loading).html("Plotting the data...");
       plot(repositoryData, 0, 1, loadTwitterWidget);
@@ -55,7 +55,7 @@ var RepositoryView = function(){
           max = data.downloads[j];
       }
 
-      $("#" + div).html(templates.repositoryDetails(data.repository, total, lastMonth, max));
+      $("#" + div).html(templates.repositoryDetails(data.repository, data.maintainers, total, lastMonth, max));
       loadTwitterWidget();
     }   
   };
@@ -74,7 +74,5 @@ var RepositoryView = function(){
 
 var view = new RepositoryView();
 
-$(function(){
-  view.init();
-});
+$(view.init);
 

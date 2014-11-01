@@ -9,7 +9,7 @@ window.templates = {
   repositoryDiv: function(divId, repository){
     return "<div id=\"" + divId + "-repository\"class=\"repository hide\"><div class=\"chart\" id=\"" + divId + "-chart\"></div><div class=\"repository-details\" id=\"" + divId + "-details\"></div></div>";
   },
-  repositoryDetails: function(repository, total, lastMonth, max){
+  repositoryDetails: function(repository, maintainers, total, lastMonth, max){
     var s = "<h2>" + repository + "</h2><a href=\"https://www.npmjs.org/package/" + repository + 
             "\" target=\"blank\">open on npm</a><br /><br />Total downloads: " + total + "<br />";
     
@@ -18,6 +18,14 @@ window.templates = {
 
     if(max)
       s += "Last peak: " + max[0] + " (" + max[1] + ")<br /><br />";
+
+    if(!!maintainers && maintainers.length > 0){
+      s += "Maintainers: ";
+      for(var i = 0; i < maintainers.length; i++)
+        s += "<a href=\"/" + maintainers[i] + "\">" + maintainers[i] + "</a> - ";
+
+      s = s.substr(0, s.length - 2) + "<br /><br />"; 
+    }
 
     s += this.shareViaTwitter("Wow! " + total + " downloads for " + repository + "!", "http://www.npm-stats.com/~packages/" + repository);
     return s;
