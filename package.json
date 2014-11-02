@@ -5,6 +5,7 @@
     "test": "mocha"
   },
   "dependencies": {
+    "connect": "3.3.2",
     "express": "3.4.4",
     "jade": "1.0.2",
     "nodetime": "*",
