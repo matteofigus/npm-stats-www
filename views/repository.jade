@@ -7,17 +7,8 @@ block head
   script(language="javascript", type="text/javascript").
     window.repository = "#{repository}";
 
-  link(rel='stylesheet', href='/stylesheets/jquery.jqplot.min.css')
-  link(rel='stylesheet', href='/stylesheets/jqplot.custom.css')
-
 block scripts
-  script(src="/javascripts/vendor/jquery.jqplot.min.js")
-  script(src="/javascripts/vendor/jqplot.canvasAxisLabelRenderer.min.js")
-  script(src="/javascripts/vendor/jqplot.canvasTextRenderer.min.js")
-  script(src="/javascripts/vendor/jqplot.dateAxisRenderer.min.js")
-  script(src="/javascripts/vendor/jqplot.highlighter.min.js")
-  script(src="/javascripts/vendor/twttr.js")
-  script(src="/javascripts/views/repository.js")
+  script var view = new RepositoryView();$(view.init);
 
 block content
   h1=title

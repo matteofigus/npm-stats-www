@@ -71,8 +71,3 @@ var RepositoryView = function(){
     }
   };
 };
-
-var view = new RepositoryView();
-
-$(view.init);
-

@@ -119,10 +119,4 @@ var UserView = function(){
       });
     }
   };
-
 };
-
-var view = new UserView();
-
-$(view.init);
-

@@ -2,7 +2,7 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/min/bundle.css')
     meta(name="robots", content="index, follow")
     meta(name="language", content="EN")
     meta(name="author", content="Matteo Figus")
@@ -34,10 +34,5 @@ html
       iframe(allowtransparency="true", frameborder="0", scrolling="no", src="//platform.twitter.com/widgets/follow_button.html?screen_name=matteofigus", style="width:230px; height:20px;")
       iframe#gh_badge(src="http://ghbtns.com/github-btn.html?user=matteofigus&repo=npm-stats-www&type=watch&count=true", allowtransparency="true", frameborder="0", scrolling="0", width="110", height="20")
 
-    script(src="/javascripts/vendor/ga.js")
-    script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js")
-    script(src="/javascripts/templates.js")
-    script(src="/javascripts/endpoints.js")
-    script(src="/javascripts/search.js")
-    script(src="/javascripts/plot.js")
+    script(src="/min/bundle.js")
     block scripts
