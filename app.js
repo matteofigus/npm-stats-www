@@ -2,6 +2,7 @@
  * Module dependencies.
  */
 
+var connect = require('connect');
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(app.router);
+app.use(express.compress());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
