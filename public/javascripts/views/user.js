@@ -83,6 +83,7 @@ var UserView = function(){
 
           var todayOneMonthAgo = now.toJSON().substr(0, 10);
 
+      data.downloads = data.downloads || [];
       for(var j = 0; j < data.downloads.length; j++){
         total += data.downloads[j][1];
         userTotal += data.downloads[j][1];
