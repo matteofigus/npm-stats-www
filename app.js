@@ -1,12 +1,11 @@
-/**
- * Module dependencies.
- */
-
 var connect = require('connect');
 var express = require('express');
 var http = require('http');
 var path = require('path');
 var app = express();
+
+var home = require('./routes/index');
+var user = require('./routes/user');
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -22,22 +21,8 @@ app.use(express.compress());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
-
-  if(process.env.NODETIME_ACCOUNT_KEY) {
-    var nodetime = require('nodetime');
-    nodetime.profile({
-      accountKey: process.env.NODETIME_ACCOUNT_KEY,
-      appName: 'My Application Name' // optional
-    });
-
-    app.use(nodetime.expressErrorHandler());
-  }
-}
-
-var home = require('./routes/index');
-var user = require('./routes/user');
+if ('development' == app.get('env'))
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
 // API
 app.get('/~info/:repository', user.info);
