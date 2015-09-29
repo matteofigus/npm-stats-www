@@ -12,7 +12,7 @@ exports.repository = function(req, res){
 exports.info = function(req, res){
   var repoName = req.params.repository;
   if(!repoName)
-    res.json(500, { error: true, message: "not valid repository"});
+    return res.json(500, { error: true, message: "not valid repository"});
 
   var registry = npmStats();
 
@@ -57,7 +57,7 @@ exports.info = function(req, res){
 exports.repositories = function(req, res){
   var userName = req.params.username;
   if(!userName)
-    res.json(500, { error: true, message: "not valid username"});
+    return res.json(500, { error: true, message: "not valid username"});
 
   var registry = npmStats();
 
