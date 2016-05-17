@@ -6,3 +6,10 @@ block head
 
 block content
   h1= title
+
+block links
+  br
+  br
+  h3 Recently updated modules
+  each module in updatedModules
+    a(href="/~packages/" + module)=module
