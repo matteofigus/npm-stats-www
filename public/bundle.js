@@ -8781,9 +8781,16 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
 !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 window.templates = {
   userInfo: function(repositoryCount, total, lastMonth){
-    var s = "<div class=\"col\"><div class=\"n\">" + repositoryCount + "</div><div class=\"t\">modules</div></div>";
-    s += "<div class=\"col\"><div class=\"n\">" + total + "</div><div class=\"t\">total downloads</div></div>";
-    s += "<div class=\"col\"><div class=\"n\">" + lastMonth + "</div><div class=\"t\">downloads last month</div></div>";
+    var addSpaces = function(n){
+      var nStr = n+'',
+          remainder = nStr.length % 3;
+
+      return (nStr.substr(0, remainder) + nStr.substr(remainder).replace(/(\d{3})/g, ' $1')).trim();
+    };
+
+    var s = "<div class=\"col m-20\"><div class=\"n\">" + addSpaces(repositoryCount) + "</div><div class=\"t\">modules</div></div>";
+    s += "<div class=\"col m-20\"><div class=\"n\">" + addSpaces(total) + "</div><div class=\"t\">total downloads</div></div>";
+    s += "<div class=\"col m-20\"><div class=\"n\">" + addSpaces(lastMonth) + "</div><div class=\"t\">downloads last month</div></div>";
 
     return s;
   },
