@@ -18,7 +18,7 @@ exports.info = function(req, res){
 
   registry.module(repoName).info(function(err, data){
     if(err)
-      res.json({ error: true, message: (err.reason == 'missing' ? "The module is missing" : err.reason), details: err });
+      res.json(500, { error: true, message: (err.reason === 'missing' ? "The module is missing" : err.reason), details: err });
     else {
 
       var ctime = (data.time && data.time.created) ? data.time.created : (data.ctime || '2009-01-01T00:00:00Z'),

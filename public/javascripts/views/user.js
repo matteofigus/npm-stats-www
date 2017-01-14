@@ -21,9 +21,11 @@ var UserView = function(){
         return $(selectors.loading).html("No repositories found on npm for user " + username);
 
       $(selectors.loading).html("Loading downloads (0/" + data.length + ")...");
+
+      var fetched = 0
+
       for(var i = 0; i < data.length; i++){
-        var fetched = 0,
-            divId = username.replace(".","-") + "-" + data[i].replace(/\./g, "-");
+        var divId = username.replace(".","-") + "-" + data[i].replace(/\./g, "-");
             
         while ($("#" + divId).length) {
           divId += "-";
@@ -32,11 +34,18 @@ var UserView = function(){
         $(selectors.repositories).append(templates.repositoryDiv(divId, data[i]));
 
         (function(repository, endpoint, div){
-          $.get(endpoint, function(info){
+
+          var next = function(err, info){
 
             $(selectors.loading).html("Loading downloads (" + fetched + "/" + data.length + ")...");
-            userData.push({ repository: repository, div: div, downloads: info.downloads, maintainers: info.maintainers });
 
+            if(err){
+              $("#" + div).html("An error occurred while trying to retrieve the downloads for the " + repository + " repository");
+              userData.push({ repository: repository, div: div, error: true });
+            } else {
+              userData.push({ repository: repository, div: div, downloads: info.downloads, maintainers: info.maintainers });
+            }
+            
             fetched ++;
             if(fetched == data.length){ 
               userData = userData.sort(function(a, b){
@@ -54,12 +63,14 @@ var UserView = function(){
               plot(userData, 0, end, loadTwitterWidget);
               $(selectors.loading).html("");
             }
+          };
 
+          $.get(endpoint, function(info){
+            next(null, info);
           }).fail(function(){
-            $("#" + div).html("An error occurred while trying to retrieve the downloads for the " + repository + " repository");
+            next(true);
           });
         })(data[i], endpoints.downloadsByRepository(data[i]), divId);
-
       }
     }).fail(function(){
       return $(selectors.loading).html("An error occurred while trying to retrieve the results");
