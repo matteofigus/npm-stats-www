@@ -8899,53 +8899,59 @@ window.plot = function(plotData, start, end, callback){
   
     var data = plotData[i];
 
-    var options = {
-      title: {
-        text: data.repository,
-        color: '#F1F1F1'
-      },
-      animate: false,
-      grid: {
-        background: '#000000', textColor: '#F1F1F1'
-      },
-      seriesDefaults:{
-        rendererOptions: {
-          showDataLabels: true
-        }
-      },
-      highlighter: {
-        show: true,
-        sizeAdjust: 7.5
-      },
-      axesDefaults: {
-        labelRenderer: $.jqplot.CanvasAxisLabelRenderer
-      },
-      axes: {
-        xaxis: { 
-          label: "Date", 
-          renderer: $.jqplot.DateAxisRenderer,
-          pad: 0
+    if(!data.error){
+
+      var options = {
+        title: {
+          text: data.repository,
+          color: '#F1F1F1'
         },
-        yaxis: { 
-          label: "Downloads", 
-        }
-      },
-      series: [{
-        showMarker: false, 
-        pointLabels: { show: true },
-        label: 'Downloads', 
-        color: '#CC3D33'
-      }]
-    };
-    $(".twitter-hashtag-button-hide", "#" + data.div + "-repository").addClass("twitter-hashtag-button").removeClass("twitter-hashtag-button-hide");
+        animate: false,
+        grid: {
+          background: '#000000', textColor: '#F1F1F1'
+        },
+        seriesDefaults:{
+          rendererOptions: {
+            showDataLabels: true
+          }
+        },
+        highlighter: {
+          show: true,
+          sizeAdjust: 7.5
+        },
+        axesDefaults: {
+          labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+        },
+        axes: {
+          xaxis: { 
+            label: "Date", 
+            renderer: $.jqplot.DateAxisRenderer,
+            pad: 0
+          },
+          yaxis: { 
+            label: "Downloads", 
+          }
+        },
+        series: [{
+          showMarker: false, 
+          pointLabels: { show: true },
+          label: 'Downloads', 
+          color: '#CC3D33'
+        }]
+      };
+      $(".twitter-hashtag-button-hide", "#" + data.div + "-repository").addClass("twitter-hashtag-button").removeClass("twitter-hashtag-button-hide");
 
-    $("#" + data.div + "-repository").removeClass("hide");
+      $("#" + data.div + "-repository").removeClass("hide");
 
-    if(data.downloads.length == 0)
-      $("#" + data.div + "-chart").html("No data to plot");
-    else
-      var plot = $.jqplot(data.div + "-chart", [data.downloads], options);
-
+      if(data.downloads.length == 0)
+        $("#" + data.div + "-chart").html("No data to plot");
+      else
+        var plot = $.jqplot(data.div + "-chart", [data.downloads], options);
+    } else {
+      $("#" + data.div + "-repository").removeClass("hide");
+      $("#" + data.div + "-chart").html("An error occurred while trying to retrieve the downloads for the " + data.repository + " repository");
+    }
+    
   }
 
   if(end < plotData.length)
@@ -9050,9 +9056,11 @@ var UserView = function(){
         return $(selectors.loading).html("No repositories found on npm for user " + username);
 
       $(selectors.loading).html("Loading downloads (0/" + data.length + ")...");
+
+      var fetched = 0
+
       for(var i = 0; i < data.length; i++){
-        var fetched = 0,
-            divId = username.replace(".","-") + "-" + data[i].replace(/\./g, "-");
+        var divId = username.replace(".","-") + "-" + data[i].replace(/\./g, "-");
             
         while ($("#" + divId).length) {
           divId += "-";
@@ -9061,11 +9069,18 @@ var UserView = function(){
         $(selectors.repositories).append(templates.repositoryDiv(divId, data[i]));
 
         (function(repository, endpoint, div){
-          $.get(endpoint, function(info){
+
+          var next = function(err, info){
 
             $(selectors.loading).html("Loading downloads (" + fetched + "/" + data.length + ")...");
-            userData.push({ repository: repository, div: div, downloads: info.downloads, maintainers: info.maintainers });
 
+            if(err){
+              $("#" + div).html("An error occurred while trying to retrieve the downloads for the " + repository + " repository");
+              userData.push({ repository: repository, div: div, error: true });
+            } else {
+              userData.push({ repository: repository, div: div, downloads: info.downloads, maintainers: info.maintainers });
+            }
+            
             fetched ++;
             if(fetched == data.length){ 
               userData = userData.sort(function(a, b){
@@ -9083,12 +9098,14 @@ var UserView = function(){
               plot(userData, 0, end, loadTwitterWidget);
               $(selectors.loading).html("");
             }
+          };
 
+          $.get(endpoint, function(info){
+            next(null, info);
           }).fail(function(){
-            $("#" + div).html("An error occurred while trying to retrieve the downloads for the " + repository + " repository");
+            next(true);
           });
         })(data[i], endpoints.downloadsByRepository(data[i]), divId);
-
       }
     }).fail(function(){
       return $(selectors.loading).html("An error occurred while trying to retrieve the results");

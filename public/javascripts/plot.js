@@ -28,53 +28,59 @@ window.plot = function(plotData, start, end, callback){
   
     var data = plotData[i];
 
-    var options = {
-      title: {
-        text: data.repository,
-        color: '#F1F1F1'
-      },
-      animate: false,
-      grid: {
-        background: '#000000', textColor: '#F1F1F1'
-      },
-      seriesDefaults:{
-        rendererOptions: {
-          showDataLabels: true
-        }
-      },
-      highlighter: {
-        show: true,
-        sizeAdjust: 7.5
-      },
-      axesDefaults: {
-        labelRenderer: $.jqplot.CanvasAxisLabelRenderer
-      },
-      axes: {
-        xaxis: { 
-          label: "Date", 
-          renderer: $.jqplot.DateAxisRenderer,
-          pad: 0
+    if(!data.error){
+
+      var options = {
+        title: {
+          text: data.repository,
+          color: '#F1F1F1'
         },
-        yaxis: { 
-          label: "Downloads", 
-        }
-      },
-      series: [{
-        showMarker: false, 
-        pointLabels: { show: true },
-        label: 'Downloads', 
-        color: '#CC3D33'
-      }]
-    };
-    $(".twitter-hashtag-button-hide", "#" + data.div + "-repository").addClass("twitter-hashtag-button").removeClass("twitter-hashtag-button-hide");
+        animate: false,
+        grid: {
+          background: '#000000', textColor: '#F1F1F1'
+        },
+        seriesDefaults:{
+          rendererOptions: {
+            showDataLabels: true
+          }
+        },
+        highlighter: {
+          show: true,
+          sizeAdjust: 7.5
+        },
+        axesDefaults: {
+          labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+        },
+        axes: {
+          xaxis: { 
+            label: "Date", 
+            renderer: $.jqplot.DateAxisRenderer,
+            pad: 0
+          },
+          yaxis: { 
+            label: "Downloads", 
+          }
+        },
+        series: [{
+          showMarker: false, 
+          pointLabels: { show: true },
+          label: 'Downloads', 
+          color: '#CC3D33'
+        }]
+      };
+      $(".twitter-hashtag-button-hide", "#" + data.div + "-repository").addClass("twitter-hashtag-button").removeClass("twitter-hashtag-button-hide");
 
-    $("#" + data.div + "-repository").removeClass("hide");
+      $("#" + data.div + "-repository").removeClass("hide");
 
-    if(data.downloads.length == 0)
-      $("#" + data.div + "-chart").html("No data to plot");
-    else
-      var plot = $.jqplot(data.div + "-chart", [data.downloads], options);
-
+      if(data.downloads.length == 0)
+        $("#" + data.div + "-chart").html("No data to plot");
+      else
+        var plot = $.jqplot(data.div + "-chart", [data.downloads], options);
+    } else {
+      $("#" + data.div + "-repository").removeClass("hide");
+      $("#" + data.div + "-chart").html("An error occurred while trying to retrieve the downloads for the " + data.repository + " repository");
+    }
+    
   }
 
   if(end < plotData.length)
