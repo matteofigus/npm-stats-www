@@ -6,5 +6,3 @@ The repository for [www.npm-stats.com](http://www.npm-stats.com)
 # License
 
 MIT
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/matteofigus/npm-stats-www/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
