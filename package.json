@@ -7,11 +7,11 @@
   },
   "dependencies": {
     "connect": "3.6.1",
-    "express": "4.15.2",
+    "express": "3.4.4",
     "jade": "1.11.0",
     "lodash": "^4.12.0",
     "npm-stats": "1.2.0",
-    "superagent": "~3.5.2"
+    "superagent": "~0.17.0"
   },
   "engines": {
     "node": "6.9.1",
