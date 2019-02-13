@@ -1,12 +1,12 @@
+var addSpaces = function(n){
+  var nStr = n+'',
+      remainder = nStr.length % 3;
+
+  return (nStr.substr(0, remainder) + nStr.substr(remainder).replace(/(\d{3})/g, ' $1')).trim();
+};
+
 window.templates = {
-  userInfo: function(repositoryCount, total, lastMonth){
-    var addSpaces = function(n){
-      var nStr = n+'',
-          remainder = nStr.length % 3;
-
-      return (nStr.substr(0, remainder) + nStr.substr(remainder).replace(/(\d{3})/g, ' $1')).trim();
-    };
-
+  userInfo: function(repositoryCount, total, lastMonth){    
     var s = "<div class=\"col m-20\"><div class=\"n\">" + addSpaces(repositoryCount) + "</div><div class=\"t\">modules</div></div>";
     s += "<div class=\"col m-20\"><div class=\"n\">" + addSpaces(total) + "</div><div class=\"t\">total downloads</div></div>";
     s += "<div class=\"col m-20\"><div class=\"n\">" + addSpaces(lastMonth) + "</div><div class=\"t\">downloads last month</div></div>";
@@ -18,10 +18,10 @@ window.templates = {
   },
   repositoryDetails: function(repository, maintainers, total, lastMonth, max){
     var s = "<h2>" + repository + "</h2><a href=\"https://www.npmjs.org/package/" + repository + 
-            "\" target=\"blank\">open on npm</a><br /><br />Total downloads: " + total + "<br />";
+            "\" target=\"blank\">open on npm</a><br /><br />Total downloads: " + addSpaces(total) + "<br />";
     
     if(lastMonth >= 0)
-      s += "Last month: " + lastMonth + "<br />";
+      s += "Last month: " + addSpaces(lastMonth) + "<br />";
 
     if(max)
       s += "Last peak: " + max[0] + " (" + max[1] + ")<br /><br />";
@@ -34,7 +34,7 @@ window.templates = {
       s = s.substr(0, s.length - 2) + "<br /><br />"; 
     }
 
-    s += this.shareViaTwitter("Wow! " + total + " downloads for " + repository + "!", "http://www.npm-stats.com/~packages/" + repository);
+    s += this.shareViaTwitter("Wow! " + addSpaces(total) + " downloads for " + repository + "!", "http://www.npm-stats.com/~packages/" + repository);
     return s;
   },
   shareViaTwitter: function(msg, url){
