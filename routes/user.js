@@ -27,12 +27,12 @@ exports.info = function(req, res){
           url = "https://api.npmjs.org/downloads/range/" + cdate + ":" + nowDate + "/" + repoName,
           maintainers = data.maintainers;
 
-      superagent.get(url).end(function(response){
+      superagent.get(url).end(function(err, response){
 
-        if(response.body.error)
+        if(err || response.body.error)
           return res.json({
             error: true,
-            message: response.body.error
+            message: err || response.body.error
           });
 
         var data = response.body.downloads,
