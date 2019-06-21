@@ -1,4 +1,4 @@
-var npmStats = require('npm-stats');
+var npmStats = require('npm-stats-patched');
 var _ = require('lodash');
 
 var from = function(){

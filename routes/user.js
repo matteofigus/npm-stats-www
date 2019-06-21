@@ -1,5 +1,5 @@
 var superagent = require('superagent');
-var npmStats = require('npm-stats');
+var npmStats = require('npm-stats-patched');
 
 exports.index = function(req, res){
   res.render('user', { title: 'Stats for ' + req.params.username, username: req.params.username, repository: '' });
