@@ -13,7 +13,7 @@ var to = function(){
   return d;
 };
 
-var registry = npmStats();
+var registry = npmStats("https://replicate.npmjs.com/");
 
 var getUpdated = function(callback){
   registry.listByDate({ since: from(), until: to() }, function(err, r){
