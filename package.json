@@ -11,6 +11,7 @@
     "express": "^4.16.4",
     "lodash": "^4.12.0",
     "morgan": "^1.9.1",
+    "npm-api": "^1.0.0",
     "npm-stats-patched": "^1.2.0",
     "pug": "^2.0.3",
     "superagent": "^4.1.0"

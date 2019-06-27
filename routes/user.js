@@ -1,30 +1,33 @@
-var superagent = require("superagent");
-var npmStats = require("npm-stats-patched");
+const superagent = require("superagent");
+const npmApi = require("npm-api");
+const npmStats = require("npm-stats-patched");
+
+const REGISTRY_URL = "https://replicate.npmjs.com/";
+const npm = new npmApi();
 
 exports.index = function(req, res) {
   res.render("user", {
-    title: "Stats for " + req.params.username,
+    title: `Stats for ${req.params.username}`,
     username: req.params.username,
     repository: ""
   });
 };
 
-exports.repository = function(req, res) {
+exports.repository = (req, res) =>
   res.render("repository", {
-    title: "Stats for " + req.params.repository,
+    title: `Stats for ${req.params.repository}`,
     username: "",
     repository: req.params.repository
   });
-};
 
-exports.info = function(req, res) {
-  var repoName = req.params.repository;
+exports.info = (req, res) => {
+  const repoName = req.params.repository;
   if (!repoName)
     return res.json(500, { error: true, message: "not valid repository" });
 
-  var registry = npmStats("https://replicate.npmjs.com/");
+  const registry = npmStats(REGISTRY_URL);
 
-  registry.module(repoName).info(function(err, data) {
+  registry.module(repoName).info((err, data) => { console.log(data.time, data.ctime, data.maintainers);
     if (err)
       res.json(500, {
         error: true,
@@ -33,65 +36,45 @@ exports.info = function(req, res) {
         details: err
       });
     else {
-      var ctime =
-          data.time && data.time.created
-            ? data.time.created
-            : data.ctime || "2009-01-01T00:00:00Z",
-        cdate = new Date(ctime).toISOString().split("T")[0],
-        nowDate = new Date().toISOString().split("T")[0],
-        url =
-          "https://api.npmjs.org/downloads/range/" +
-          cdate +
-          ":" +
-          nowDate +
-          "/" +
-          repoName,
-        maintainers = data.maintainers;
+      const ctime =
+        data.time && data.time.created
+          ? data.time.created
+          : data.ctime || "2009-01-01T00:00:00Z";
+      const cdate = new Date(ctime).toISOString().split("T")[0];
+      const nowDate = new Date().toISOString().split("T")[0];
+      const url = `https://api.npmjs.org/downloads/range/${cdate}:${nowDate}/${repoName}`;
 
-      superagent.get(url).end(function(err, response) {
+      superagent.get(url).end((err, response) => {
         if (err || response.body.error)
           return res.json({
             error: true,
             message: err || response.body.error
           });
 
-        var data = response.body.downloads,
-          mappedDownloads = [],
-          mappedMaintainers = [];
+        const downloads = response.body.downloads.map(el => [
+          el.day,
+          el.downloads
+        ]);
 
-        for (var i = 0; i < data.length; i++)
-          mappedDownloads.push([data[i].day, data[i].downloads]);
+        const maintainers = data.maintainers.map(el => el.name);
 
-        for (var i = 0; i < maintainers.length; i++)
-          mappedMaintainers.push(maintainers[i].name);
-
-        res.json({
-          downloads: mappedDownloads,
-          maintainers: mappedMaintainers
-        });
+        res.json({ downloads, maintainers });
       });
     }
   });
 };
 
-exports.repositories = function(req, res) {
-  var userName = req.params.username;
-  if (!userName)
+exports.repositories = (req, res) => {
+  const { username } = req.params;
+  if (!username)
     return res.json(500, { error: true, message: "not valid username" });
 
-  var registry = npmStats("https://replicate.npmjs.com/");
+  const maintainer = npm.maintainer(username);
 
-  registry.user(userName).list(function(err, data) {
-    console.log(err);
-    console.log(data);
-    if (err) res.json(400, { error: true, message: "api error", details: err });
-    else {
-      var mapped = [];
-
-      for (var i = 0; i < data.length; i++)
-        if (data[i] && data[i] != "") mapped.push(data[i]);
-
-      res.json(mapped);
-    }
-  });
+  maintainer
+    .repos()
+    .then(r => res.json(r.sort()))
+    .catch(details =>
+      res.json(400, { error: true, message: "api error", details })
+    );
 };
