@@ -27,7 +27,7 @@ exports.info = (req, res) => {
 
   const registry = npmStats(REGISTRY_URL);
 
-  registry.module(repoName).info((err, data) => { console.log(data.time, data.ctime, data.maintainers);
+  registry.module(repoName).info((err, data) => {
     if (err)
       res.json(500, {
         error: true,

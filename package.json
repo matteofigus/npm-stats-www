@@ -2,6 +2,7 @@
   "name": "npm-stats-www",
   "version": "0.0.1",
   "scripts": {
+    "build":"grunt",
     "start": "node app.js",
     "test": "mocha"
   },
