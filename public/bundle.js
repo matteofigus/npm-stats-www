@@ -8828,7 +8828,8 @@ window.endpoints = {
     return '/~repositories/' + username;
   },
   downloadsByRepository: function(repository, checkItExists){
-    return '/~info/' + repository + (checkItExists ? "?checkItExists=true" : "");
+    var encoded = encodeURIComponent(repository);
+    return '/~info/' + encoded + (checkItExists ? "?checkItExists=true" : "");
   }
 };
 var Search = function(){
