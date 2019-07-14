@@ -2,7 +2,7 @@
   "name": "npm-stats-www",
   "version": "0.0.1",
   "scripts": {
-    "build":"grunt",
+    "build": "grunt",
     "start": "node app.js",
     "test": "mocha"
   },
@@ -10,7 +10,7 @@
     "body-parser": "^1.18.3",
     "errorhandler": "^1.5.0",
     "express": "^4.16.4",
-    "lodash": "^4.12.0",
+    "lodash": "^4.17.13",
     "morgan": "^1.9.1",
     "npm-api": "^1.0.0",
     "npm-stats-patched": "^1.2.0",
