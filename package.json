@@ -13,7 +13,7 @@
     "lodash": "^4.17.13",
     "morgan": "^1.9.1",
     "npm-api": "^1.0.0",
-    "npm-stats-patched": "^1.2.0",
+    "npm-stats-patched": "^1.2.1",
     "pug": "^2.0.3",
     "superagent": "^4.1.0"
   },
