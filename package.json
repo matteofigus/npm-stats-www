@@ -10,7 +10,7 @@
     "body-parser": "^1.18.3",
     "errorhandler": "^1.5.0",
     "express": "^4.16.4",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "morgan": "^1.9.1",
     "npm-api": "^1.0.0",
     "npm-stats-patched": "^1.2.1",
